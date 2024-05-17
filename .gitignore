@@ -2,3 +2,5 @@ venv
 .env
 practice.ipynb
 Part2_Llamaindex_with_Chat_GPT.ipynb
+playground
+exp1)main.py
