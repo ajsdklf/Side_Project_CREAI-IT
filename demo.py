@@ -11,7 +11,6 @@ from llama_index.embeddings.openai import OpenAIEmbedding
 from llama_index.core.retrievers import VectorIndexRetriever 
 from llama_index.core import DocumentSummaryIndex
 from llama_index.core import StorageContext, load_index_from_storage
-from sklearn.metrics.pairwise import cosine_similarity
 from llama_index.core import get_response_synthesizer
 import requests 
 from openai import OpenAI
@@ -93,7 +92,7 @@ if option == 'ASD':
         
         query_engine = vector_index.as_query_engine()
         prompts_dict = query_engine.get_prompts()
-        
+
         with st.expander('조언 생성이 완료됐습니다!'):
             st.markdown(f"👨‍⚕️최종적인 조언👨‍⚕️: {response.response}")
             for node in nodes:
