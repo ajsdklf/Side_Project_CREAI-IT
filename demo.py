@@ -22,7 +22,7 @@ from pathlib import Path
 from llama_index.core import PromptTemplate
 
 
-st.header('영유아 선생님 도우미')
+st.header('👩🏻‍🍼 영유아 선생님 도우미 👩🏻‍🍼')
 
 load_dotenv()
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
@@ -84,38 +84,39 @@ if option == 'ASD':
     )
     answer = st.chat_input('아이가 보이는 행동을 말해주세요!')
     if answer:
-        summarizer_input = f"Disease toddler is showing : {option} \n {answer}"
-        
-        summarized_answer = client.chat.completions.create(
-            model='gpt-4o-2024-05-13',
-            messages=[
-                {'role': 'system', 'content': SUMMARIZER_PROMPT},
-                {'role': 'user', 'content': summarizer_input}
-            ]
-        ).choices[0].message.content
-        
-        nodes = retriever.retrieve(summarized_answer)
-        
-        query_engine = vector_index.as_query_engine()
-        prompts_dict = query_engine.get_prompts()
-        
-        FINAL_ANSWER_PROMPT = PromptTemplate(FINAL_ANSWER_PROMPT)
-        new_prompt_refine = PromptTemplate(new_prompt_refine)
-        
-        query_engine.update_prompts(
-            {"response_synthesizer:text_qa_template": FINAL_ANSWER_PROMPT, "response_synthesizer:refine_template": new_prompt_refine}
-            )
-        
-        response_synthesizer = get_response_synthesizer(response_mode='compact')
-        
-        response = query_engine.query(summarized_answer)
-        
-        with st.expander('조언 생성이 완료됐습니다!'):
-            st.markdown(f"👨‍⚕️최종적인 조언👨‍⚕️: {response.response}")
-            for node in nodes:
-                st.markdown(f"{node.text}란 문장이랑 유사한 행동을 보이네요!")
-            st.markdown(summarized_answer)
-            st.markdown(query_engine.get_prompts())
+        with st.spinner('🧑🏻‍🏫조언을 생성하고 있어요!🧑🏻‍🏫'):
+            summarizer_input = f"Disease toddler is showing : {option} \n {answer}"
+            
+            summarized_answer = client.chat.completions.create(
+                model='gpt-4o-2024-05-13',
+                messages=[
+                    {'role': 'system', 'content': SUMMARIZER_PROMPT},
+                    {'role': 'user', 'content': summarizer_input}
+                ]
+            ).choices[0].message.content
+            
+            nodes = retriever.retrieve(summarized_answer)
+            
+            query_engine = vector_index.as_query_engine()
+            prompts_dict = query_engine.get_prompts()
+            
+            FINAL_ANSWER_PROMPT = PromptTemplate(FINAL_ANSWER_PROMPT)
+            new_prompt_refine = PromptTemplate(new_prompt_refine)
+            
+            query_engine.update_prompts(
+                {"response_synthesizer:text_qa_template": FINAL_ANSWER_PROMPT, "response_synthesizer:refine_template": new_prompt_refine}
+                )
+            
+            response_synthesizer = get_response_synthesizer(response_mode='compact')
+            
+            response = query_engine.query(summarized_answer)
+            
+            with st.expander('조언 생성이 완료됐습니다!'):
+                st.markdown(f"👨‍⚕️최종적인 조언👨‍⚕️: {response.response}")
+                for node in nodes:
+                    st.markdown(f"{node.text}란 문장이랑 유사한 행동을 보이네요!")
+                st.markdown(summarized_answer)
+                st.markdown(f"Called DataBase : {storage_context}")
 
 if option == 'ADHD':
     storage_context = StorageContext.from_defaults(persist_dir="~/dataset/CREAI+IT_side_project/adhd_index")
@@ -126,37 +127,40 @@ if option == 'ADHD':
     )
     answer = st.chat_input('아이가 보이는 행동을 말해주세요!')
     if answer:
-        summarizer_input = f"Disease toddler is showing : {option} \n {answer}"
-        
-        summarized_answer = client.chat.completions.create(
-            model='gpt-4o-2024-05-13',
-            messages=[
-                {'role': 'system', 'content': SUMMARIZER_PROMPT},
-                {'role': 'user', 'content': summarizer_input}
-            ]
-        ).choices[0].message.content
-        
-        nodes = retriever.retrieve(summarized_answer)
-        
-        response_synthesizer = get_response_synthesizer(response_mode='compact')
-        
-        query_engine = vector_index.as_query_engine()
-        prompts_dict = query_engine.get_prompts()
-        
-        FINAL_ANSWER_PROMPT = PromptTemplate(FINAL_ANSWER_PROMPT)
-        new_prompt_refine = PromptTemplate(new_prompt_refine)
-        
-        query_engine.update_prompts(
-            {"response_synthesizer:text_qa_template": FINAL_ANSWER_PROMPT, "response_synthesizer:refine_template": new_prompt_refine}
-            )
-        
-        response = query_engine.query(summarized_answer)
+        with st.spinner('🧑🏻‍🏫조언을 생성하고 있어요!🧑🏻‍🏫'):
+            summarizer_input = f"Disease toddler is showing : {option} \n {answer}"
+            
+            summarized_answer = client.chat.completions.create(
+                model='gpt-4o-2024-05-13',
+                messages=[
+                    {'role': 'system', 'content': SUMMARIZER_PROMPT},
+                    {'role': 'user', 'content': summarizer_input}
+                ]
+            ).choices[0].message.content
+            
+            nodes = retriever.retrieve(summarized_answer)
+            
+            response_synthesizer = get_response_synthesizer(response_mode='compact')
+            
+            query_engine = vector_index.as_query_engine()
+            prompts_dict = query_engine.get_prompts()
+            
+            FINAL_ANSWER_PROMPT = PromptTemplate(FINAL_ANSWER_PROMPT)
+            new_prompt_refine = PromptTemplate(new_prompt_refine)
+            
+            query_engine.update_prompts(
+                {"response_synthesizer:text_qa_template": FINAL_ANSWER_PROMPT, "response_synthesizer:refine_template": new_prompt_refine}
+                )
+            
+            response = query_engine.query(summarized_answer)
 
-        with st.expander('조언 생성이 완료됐습니다!'):
-            st.markdown(f"👨‍⚕️최종적인 조언👨‍⚕️: {response.response}")
-            for node in nodes:
-                st.markdown(f"{node.text}란 문장이랑 유사한 행동을 보이네요!")
-            st.markdown(summarized_answer)
+            with st.expander('조언 생성이 완료됐습니다!'):
+                st.markdown(f"👨‍⚕️최종적인 조언👨‍⚕️: {response.response}")
+                for node in nodes:
+                    st.markdown(f"{node.text}란 문장이랑 유사한 행동을 보이네요!")
+                st.markdown(summarized_answer)
+                
+                st.markdown(f"Called DataBase : {storage_context}")
 
 if option == 'SDA':
     storage_context = StorageContext.from_defaults(persist_dir="~/dataset/CREAI+IT_side_project/sda_index")
@@ -167,34 +171,37 @@ if option == 'SDA':
     )
     answer = st.chat_input('아이가 보이는 행동을 말해주세요!')
     if answer:
-        summarizer_input = f"Disease toddler is showing : {option} \n {answer}"
-        
-        summarized_answer = client.chat.completions.create(
-            model='gpt-4o-2024-05-13',
-            messages=[
-                {'role': 'system', 'content': SUMMARIZER_PROMPT},
-                {'role': 'user', 'content': summarizer_input}
-            ]
-        ).choices[0].message.content
-        
-        nodes = retriever.retrieve(summarized_answer)
-        
-        response_synthesizer = get_response_synthesizer(response_mode='compact')
-        
-        FINAL_ANSWER_PROMPT = PromptTemplate(FINAL_ANSWER_PROMPT)
-        new_prompt_refine = PromptTemplate(new_prompt_refine)
-        
-        query_engine.update_prompts(
-            {"response_synthesizer:text_qa_template": FINAL_ANSWER_PROMPT, "response_synthesizer:refine_template": new_prompt_refine}
-            )
-        
-        query_engine = vector_index.as_query_engine()
-        prompts_dict = query_engine.get_prompts()
-        
-        response = query_engine.query(summarized_answer)
+        with st.spinner('🧑🏻‍🏫 조언이 생성되고 있어요! 🧑🏻‍🏫'):
+            summarizer_input = f"Disease toddler is showing : {option} \n {answer}"
+            
+            summarized_answer = client.chat.completions.create(
+                model='gpt-4o-2024-05-13',
+                messages=[
+                    {'role': 'system', 'content': SUMMARIZER_PROMPT},
+                    {'role': 'user', 'content': summarizer_input}
+                ]
+            ).choices[0].message.content
+            
+            nodes = retriever.retrieve(summarized_answer)
+            
+            response_synthesizer = get_response_synthesizer(response_mode='compact')
+            
+            FINAL_ANSWER_PROMPT = PromptTemplate(FINAL_ANSWER_PROMPT)
+            new_prompt_refine = PromptTemplate(new_prompt_refine)
+            
+            query_engine.update_prompts(
+                {"response_synthesizer:text_qa_template": FINAL_ANSWER_PROMPT, "response_synthesizer:refine_template": new_prompt_refine}
+                )
+            
+            query_engine = vector_index.as_query_engine()
+            prompts_dict = query_engine.get_prompts()
+            
+            response = query_engine.query(summarized_answer)
 
-        with st.expander('조언 생성이 완료됐습니다!'):
-            st.markdown(f"👨‍⚕️최종적인 조언👨‍⚕️: {response.response}")
-            for node in nodes:
-                st.markdown(f"{node.text}란 문장이랑 유사한 행동을 보이네요!")
-            st.markdown(summarized_answer)
+            with st.expander('조언 생성이 완료됐습니다!'):
+                st.markdown(f"👨‍⚕️최종적인 조언👨‍⚕️: {response.response}")
+                for node in nodes:
+                    st.markdown(f"{node.text}란 문장이랑 유사한 행동을 보이네요!")
+                st.markdown(summarized_answer)
+                st.markdown(f"Called DataBase : {storage_context}")
+
